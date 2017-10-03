@@ -5,7 +5,7 @@ import DayTemp from './dayTemp';
 export default class App extends React.Component {
     render() {
         //Update Day
-        const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        const days = ["Sun","Mon","Tues","Wed","Thurs","Fri","Sat"];
         const date = new Date();
         const dayNumber = date.getDay();
         const day = days[dayNumber];
@@ -27,11 +27,25 @@ export default class App extends React.Component {
         const monthNumber = date.getMonth();
         const month = months[monthNumber];
 
+        //Update Month
+        const weatherArray = ["72˚", "65˚", "64˚", "74˚", "80˚", "69˚", "63˚"];
+        const currentWeather = weatherArray[dayNumber];
+
+        const listDays = () => {
+            return days.map((day, index) => {
+                return <DayTemp key = {index} valueDay = {days[index]} valueWeather = {weatherArray[index]} />
+            })
+        }
+
         return (
             <View style= {styles.container}>
                 <Text style= {styles.state}>San Francisco</Text>
                 <Text style= {styles.date}>{day}, {month} {dayNumber + 1}</Text>
-                <DayTemp days = {days} />
+                <Text style= {styles.currentWeather}>{currentWeather}</Text>
+
+                <View style= {styles.dayContainer}>
+                    {listDays()}
+                </View>
             </View>
         );
     }
@@ -43,15 +57,29 @@ const styles = StyleSheet.create({
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      height: '100%'
+      height: '100%',
+      backgroundColor: 'magenta'
     },
     state: {
         fontSize: 40,
         fontWeight: '300',
+        paddingBottom: 5
     },
     date:{
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: '200',
+        paddingBottom: 10
+    },
+    dayTemp: {
+        width: 50,
+        height: 50
+    },
+    dayContainer: {
+      flexDirection: 'row',
+    },
+    currentWeather: {
+      fontSize: 60,
+      paddingBottom: 5
     }
 
 });
