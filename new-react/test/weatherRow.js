@@ -3,17 +3,18 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default WeatherRow(props) = () => {
+export default WeatherRow = (props) => {
     return (
-        <View style = {styles.dayTemp}> //row
+        <View style = {styles.dayTemp}>
             <Text>Day</Text>
             <Text>Temperature</Text>
 
-            <View style = {styles.weatherInfo}> // column
-                <Text>WeatherDescription</Text>
+            <View style = {styles.weatherInfo}>
+                <Text>Description</Text>
                 <Text>Humidity</Text>
                 <Text>Wind Type</Text>
             </View>
+
         </View>
     );
 }
@@ -22,9 +23,10 @@ const styles = StyleSheet.create({
     dayTemp: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        height: '100%',
+        alignItems: 'flex-start',
+        justifyContent: 'space-around',
+        paddingTop: 50,
+        width: '100%',
         // backgroundColor: 'purple'
     },
     day: {
@@ -35,6 +37,8 @@ const styles = StyleSheet.create({
     weather: {
         fontSize: 18,
         fontWeight: '400'
-
+    },
+    weatherInfo: {
+        flexDirection: 'column'
     }
 });

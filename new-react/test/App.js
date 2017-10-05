@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import DayTemp from './dayTemp';
+import WeatherRow from './weatherRow';
+
+// 96173cf95fce5fe7455bd3745d1436da
 
 export default class App extends React.Component {
     constructor(props){
         super(props);
-
-        // this.days = [];
 
         this.state = {
             weatherDescription: null,
@@ -21,34 +22,39 @@ export default class App extends React.Component {
     }
 
     //fetch the description of the weather of San Francisco and set the state
+    // `http://api.openweathermap.org/data/2.5/weather?appid=${apikey}&q=san+francisco`
     findWeather() {
         const apikey = '6c407087861910b3e50bd32e9989c59d';
-        const path = `http://api.openweathermap.org/data/2.5/weather?appid=${apikey}&q=san+francisco`;
+        const path = `https://api.darksky.net/forecast/96173cf95fce5fe7455bd3745d1436da/42.3601,-71.0589`;
         fetch(path)
         .then(res => res.json())
         .then((json) => {
-            // console.log(json);
-            if (json.cod === 200){
-                const description = json.weather[0].main;
-                const weatherHumidity = json.main.humidity;
-                const windValue = json.wind.speed;
-                if (windValue < 5.0){
-                    windValue = "Calm";
-                }
-                if (windValue > 5.0 && windValue < 15.0){
-                    windValue = "Moderate";
-                }
-                if (windValue > 15.0){
-                    windValue = "Extreme";
-                }
-                console.log(description);
-                console.log(weatherHumidity);
-                console.log(windValue);
-                this.setState({weatherDescription: description, humidity: weatherHumidity, wind: windValue});
-            }else{
-                console.log("not status 200");
-                this.setState({weatherDescription: null});
-            }
+            console.log(json);
+            const description = json.currently.summary;
+            const weatherHumidity = json.currently.humidity;
+            const windValue = json.currently.windSpeed;
+            this.setState({weatherDescription: description, humidity: weatherHumidity, wind: windValue});
+            // if (json.cod === 200){
+                // const description = json.weather[0].main;
+                // const weatherHumidity = json.main.humidity;
+                // const windValue = json.wind.speed;
+                // if (windValue < 5.0){
+                //     windValue = "Calm";
+                // }
+                // if (windValue > 5.0 && windValue < 15.0){
+                //     windValue = "Moderate";
+                // }
+                // if (windValue > 15.0){
+                //     windValue = "Extreme";
+                // }
+                // console.log(description);
+                // console.log(weatherHumidity);
+                // console.log(windValue);
+                // this.setState({weatherDescription: description, humidity: weatherHumidity, wind: windValue});
+            // }else{
+                // console.log("not status 200");
+                // this.setState({weatherDescription: null});
+            // }
         })
         .catch(err => console.log(err));
     }
@@ -110,6 +116,8 @@ export default class App extends React.Component {
                 <View style= {styles.dayContainer}>
                     {listDaysTemp()}
                 </View>
+                <WeatherRow />
+
             </View>
         );
     }
