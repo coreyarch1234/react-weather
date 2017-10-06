@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import DayTemp from './dayTemp';
 import WeatherRow from './weatherRow';
+import LocationData from './location';
 
 // 96173cf95fce5fe7455bd3745d1436da
 
@@ -32,29 +33,21 @@ export default class App extends React.Component {
             console.log(json);
             const description = json.currently.summary;
             const weatherHumidity = json.currently.humidity;
-            const windValue = json.currently.windSpeed;
+            var windValue = json.currently.windSpeed;
+            console.log("the windSpeed is: " + windValue);
+            if (windValue < 5.0){
+                windValue = "Calm";
+                console.log("the windSpeed is: " + windValue);
+            }
+            if (windValue > 5.0 && windValue < 15.0){
+                windValue = "Moderate";
+                console.log("the windSpeed is: " + windValue);
+            }
+            if (windValue > 15.0){
+                windValue = "Extreme";
+                console.log("the windSpeed is: " + windValue);
+            }
             this.setState({weatherDescription: description, humidity: weatherHumidity, wind: windValue});
-            // if (json.cod === 200){
-                // const description = json.weather[0].main;
-                // const weatherHumidity = json.main.humidity;
-                // const windValue = json.wind.speed;
-                // if (windValue < 5.0){
-                //     windValue = "Calm";
-                // }
-                // if (windValue > 5.0 && windValue < 15.0){
-                //     windValue = "Moderate";
-                // }
-                // if (windValue > 15.0){
-                //     windValue = "Extreme";
-                // }
-                // console.log(description);
-                // console.log(weatherHumidity);
-                // console.log(windValue);
-                // this.setState({weatherDescription: description, humidity: weatherHumidity, wind: windValue});
-            // }else{
-                // console.log("not status 200");
-                // this.setState({weatherDescription: null});
-            // }
         })
         .catch(err => console.log(err));
     }
@@ -82,6 +75,9 @@ export default class App extends React.Component {
         const date = new Date();
         const dayNumber = date.getDay();
         const day = days[dayNumber];
+        const testDate = new Date(1507176000 * 1000);
+        const testDay = testDate.getDay();
+        console.log("the day is: " + days[testDay + 1]);
 
         //Update Month
         var months = new Array();
@@ -112,11 +108,10 @@ export default class App extends React.Component {
                     {this.showWeather()}
                 </View>
 
-                {/* REACT COMMENT */}
                 <View style= {styles.dayContainer}>
                     {listDaysTemp()}
                 </View>
-                <WeatherRow />
+                <LocationData />
 
             </View>
         );

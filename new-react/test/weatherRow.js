@@ -6,13 +6,11 @@ import { StyleSheet, Text, View } from 'react-native';
 export default WeatherRow = (props) => {
     return (
         <View style = {styles.dayTemp}>
-            <Text>Day</Text>
-            <Text>Temperature</Text>
+            <Text>{props.day}</Text>
+            <Text>{props.temp}</Text>
 
             <View style = {styles.weatherInfo}>
-                <Text>Description</Text>
-                <Text>Humidity</Text>
-                <Text>Wind Type</Text>
+                <Text>{props.description}</Text>
             </View>
 
         </View>
