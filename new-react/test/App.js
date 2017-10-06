@@ -4,7 +4,6 @@ import DayTemp from './dayTemp';
 import WeatherRow from './weatherRow';
 import LocationData from './location';
 
-// 96173cf95fce5fe7455bd3745d1436da
 
 export default class App extends React.Component {
     constructor(props){

@@ -8,11 +8,12 @@ import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import WeatherRow from './weatherRow';
 
+
 export default class Location extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            weatherWeekObj:  null, // weather json here
+            weatherWeekObj:  "hh", // weather json here
             weatherArray: [""]
         }
         this.findWeather();
@@ -33,7 +34,7 @@ export default class Location extends React.Component {
     //fetch the weather info for 5 days
     findWeather() {
         const apikey = '6c407087861910b3e50bd32e9989c59d';
-        const path = `https://api.darksky.net/forecast/96173cf95fce5fe7455bd3745d1436da/42.3601,-71.0589`;
+        const path = `https://api.darksky.net/forecast/6c407087861910b3e50bd32e9989c59d/42.3601,-71.0589`;
         fetch(path)
         .then(res => res.json())
         .then((json) => {
@@ -97,9 +98,9 @@ export default class Location extends React.Component {
 
     showWeather(){
 
-        if (this.state.weatherWeekObj === null) {
-
-        }
+        // if (this.state.weatherWeekObj === null) {
+        //
+        // }
         // if state weather != null
             // generate weather jsx
 
@@ -130,12 +131,12 @@ export default class Location extends React.Component {
         // if weather json != "hh"
         //  map weather jso to jsx
 
-        const displayMe = this.showWeather();
+        // const displayMe = this.showWeather();
 
         return (
             <View>
                 <ScrollView>
-                    {displayMe}
+                    {this.showWeather()}
                 </ScrollView>
             </View>
         )
