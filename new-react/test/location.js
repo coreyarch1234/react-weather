@@ -12,7 +12,7 @@ export default class Location extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            weatherWeekObj:  "hh",
+            weatherWeekObj:  null, // weather json here
             weatherArray: [""]
         }
         this.findWeather();
@@ -38,6 +38,9 @@ export default class Location extends React.Component {
         .then(res => res.json())
         .then((json) => {
             console.log(json);
+
+            // set state to weather json
+
             const days = ["Sun","Mon","Tues","Wed","Thurs","Fri","Sat"];
             const daysTimeStamp = json.daily.data; //array of days [0 - 6]
 
@@ -93,6 +96,15 @@ export default class Location extends React.Component {
 
 
     showWeather(){
+
+        if (this.state.weatherWeekObj === null) {
+
+        }
+        // if state weather != null
+            // generate weather jsx
+
+            // else show default message
+
         if (this.state.weatherWeekObj[2]){
             return (
                 [
@@ -112,15 +124,35 @@ export default class Location extends React.Component {
     }
 
 
-    render(){
+
+    render() {
+
+        // if weather json != "hh"
+        //  map weather jso to jsx
+
+        const displayMe = this.showWeather();
+
         return (
             <View>
                 <ScrollView>
-                    {this.showWeather()}
-
+                    {displayMe}
                 </ScrollView>
             </View>
-
         )
     }
 }
+
+
+
+
+
+
+//
+
+/*
+this.state.user =  {name: "Joe", age: 33};    //
+this.state.user.name = "cindy";
+this.setState( this.state.user );      // ! Bad !
+
+this.setState( { ...this.state.user, name:"Cindy" } );
+*/
