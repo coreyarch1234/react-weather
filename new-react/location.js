@@ -34,29 +34,17 @@ export default class Location extends React.Component {
     createWeatherComponents(weatherData){
         const days = ["Sun","Mon","Tues","Wed","Thurs","Fri","Sat"];
         const daysTimeStamp = weatherData //array of days [0 - 6]
-
-        const dayOne = daysTimeStamp[0];
-        const dayTwo = daysTimeStamp[1];
-        const dayThree = daysTimeStamp[2];
-        const dayFour = daysTimeStamp[3];
-        const dayFive = daysTimeStamp[4];
-        const daySix = daysTimeStamp[5];
-        const daySeven = daysTimeStamp[6];
-
-        var weatherWeekObj =
-        [[this.convertDay(daysTimeStamp[0].time),dayOne.summary,dayOne.temperatureHigh],[this.convertDay(daysTimeStamp[1].time),dayTwo.summary,dayTwo.temperatureHigh],[this.convertDay(daysTimeStamp[2].time),dayThree.summary,dayThree.temperatureHigh],
-        [this.convertDay(daysTimeStamp[3].time),dayFour.summary,dayFour.temperatureHigh],[this.convertDay(daysTimeStamp[4].time),dayFive.summary,dayFive.temperatureHigh], [this.convertDay(daysTimeStamp[5].time),daySix.summary,daySix.temperatureHigh], [this.convertDay(daysTimeStamp[6].time),daySeven.summary,daySeven.temperatureHigh]]
-
-        var weatherShow = [
-            <WeatherRow key= "1" day={weatherWeekObj[0][0]} temp={weatherWeekObj[0][1]} description={weatherWeekObj[0][2]} />,
-            <WeatherRow key= "2" day={weatherWeekObj[1][0]} temp={weatherWeekObj[1][1]} description={weatherWeekObj[1][2]} />,
-            <WeatherRow key= "3" day={weatherWeekObj[2][0]} temp={weatherWeekObj[2][1]} description={weatherWeekObj[2][2]} />,
-            <WeatherRow key= "4" day={weatherWeekObj[3][0]} temp={weatherWeekObj[3][1]} description={weatherWeekObj[3][2]} />,
-            <WeatherRow key= "5" day={weatherWeekObj[4][0]} temp={weatherWeekObj[4][1]} description={weatherWeekObj[4][2]} />,
-            <WeatherRow key= "6" day={weatherWeekObj[5][0]} temp={weatherWeekObj[5][1]} description={weatherWeekObj[5][2]} />,
-            <WeatherRow key= "7" day={weatherWeekObj[6][0]} temp={weatherWeekObj[6][1]} description={weatherWeekObj[6][2]} />
-        ]
-        this.setState({weatherShow: weatherShow});
+        var weatherWeekObj = [];
+        var weatherShow = [];
+        for (const [index, element] of days.entries()){
+            var currentDay = daysTimeStamp[index];
+            weatherShow.push(<WeatherRow key={index} day={this.convertDay(currentDay.time)} temp={currentDay.temperatureHigh} description={currentDay.summary}/>);
+            console.log("index: " + index);
+            if (index == days.length - 1){
+                console.log("we reached it");
+                this.setState({weatherShow: weatherShow});
+            }
+        }
     }
 
     weatherJSON(){
