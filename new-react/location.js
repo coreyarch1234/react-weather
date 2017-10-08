@@ -13,15 +13,14 @@ export default class Location extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            weatherWeekObj:  "hh", // weather json here
-            weatherArray: [""]
+            weatherJSON: null,
+            weatherShow: null
         }
-        this.findWeather();
+        // this.weatherJSON();
     }
 
     componentWillMount(){
-        //set the state of the weather description
-        // this.findWeather();
+
     }
     convertDay(timeStamp) {
         const days = ["Mon","Tues","Wed","Thurs","Fri","Sat", "Sun"];
@@ -31,108 +30,59 @@ export default class Location extends React.Component {
         console.log("the day ISSSSS: " + days[testDay]);
         return days[testDay]
     }
-    //fetch the weather info for 5 days
-    findWeather() {
-        const apikey = '6c407087861910b3e50bd32e9989c59d';
-        const path = `https://api.darksky.net/forecast/6c407087861910b3e50bd32e9989c59d/42.3601,-71.0589`;
+
+    createWeatherComponents(weatherData){
+        const days = ["Sun","Mon","Tues","Wed","Thurs","Fri","Sat"];
+        const daysTimeStamp = weatherData //array of days [0 - 6]
+
+        const dayOne = daysTimeStamp[0];
+        const dayTwo = daysTimeStamp[1];
+        const dayThree = daysTimeStamp[2];
+        const dayFour = daysTimeStamp[3];
+        const dayFive = daysTimeStamp[4];
+        const daySix = daysTimeStamp[5];
+        const daySeven = daysTimeStamp[6];
+
+        var weatherWeekObj =
+        [[this.convertDay(daysTimeStamp[0].time),dayOne.summary,dayOne.temperatureHigh],[this.convertDay(daysTimeStamp[1].time),dayTwo.summary,dayTwo.temperatureHigh],[this.convertDay(daysTimeStamp[2].time),dayThree.summary,dayThree.temperatureHigh],
+        [this.convertDay(daysTimeStamp[3].time),dayFour.summary,dayFour.temperatureHigh],[this.convertDay(daysTimeStamp[4].time),dayFive.summary,dayFive.temperatureHigh], [this.convertDay(daysTimeStamp[5].time),daySix.summary,daySix.temperatureHigh], [this.convertDay(daysTimeStamp[6].time),daySeven.summary,daySeven.temperatureHigh]]
+
+        var weatherShow = [
+            <WeatherRow key= "1" day={weatherWeekObj[0][0]} temp={weatherWeekObj[0][1]} description={weatherWeekObj[0][2]} />,
+            <WeatherRow key= "2" day={weatherWeekObj[1][0]} temp={weatherWeekObj[1][1]} description={weatherWeekObj[1][2]} />,
+            <WeatherRow key= "3" day={weatherWeekObj[2][0]} temp={weatherWeekObj[2][1]} description={weatherWeekObj[2][2]} />,
+            <WeatherRow key= "4" day={weatherWeekObj[3][0]} temp={weatherWeekObj[3][1]} description={weatherWeekObj[3][2]} />,
+            <WeatherRow key= "5" day={weatherWeekObj[4][0]} temp={weatherWeekObj[4][1]} description={weatherWeekObj[4][2]} />,
+            <WeatherRow key= "6" day={weatherWeekObj[5][0]} temp={weatherWeekObj[5][1]} description={weatherWeekObj[5][2]} />,
+            <WeatherRow key= "7" day={weatherWeekObj[6][0]} temp={weatherWeekObj[6][1]} description={weatherWeekObj[6][2]} />
+        ]
+        this.setState({weatherShow: weatherShow});
+    }
+
+    weatherJSON(){
+        const apikey = '2a479a5ffb1ba14071e4c9bc65704b63';
+        const path = `https://api.darksky.net/forecast/2a479a5ffb1ba14071e4c9bc65704b63/42.3601,-71.0589`;
+        console.log("it is fetching");
         fetch(path)
         .then(res => res.json())
         .then((json) => {
-            console.log(json);
-
-            // set state to weather json
-
-            const days = ["Sun","Mon","Tues","Wed","Thurs","Fri","Sat"];
-            const daysTimeStamp = json.daily.data; //array of days [0 - 6]
-
-            const dayOne = daysTimeStamp[0];
-            const dayTwo = daysTimeStamp[1];
-            const dayThree = daysTimeStamp[2];
-            const dayFour = daysTimeStamp[3];
-            const dayFive = daysTimeStamp[4];
-            const daySix = daysTimeStamp[5];
-            const daySeven = daysTimeStamp[6];
-
-            var weatherWeekObjUpdated =
-            [[this.convertDay(daysTimeStamp[0].time),dayOne.summary,dayOne.temperatureHigh],[this.convertDay(daysTimeStamp[1].time),dayTwo.summary,dayTwo.temperatureHigh],[this.convertDay(daysTimeStamp[2].time),dayThree.summary,dayThree.temperatureHigh],
-            [this.convertDay(daysTimeStamp[3].time),dayFour.summary,dayFour.temperatureHigh],[this.convertDay(daysTimeStamp[4].time),dayFive.summary,dayFive.temperatureHigh], [this.convertDay(daysTimeStamp[5].time),daySix.summary,daySix.temperatureHigh], [this.convertDay(daysTimeStamp[6].time),daySeven.summary,daySeven.temperatureHigh]]
-
-            var weatherItems = [<WeatherRow key= "1" day={weatherWeekObjUpdated[0][0]} temp={weatherWeekObjUpdated[0][1]} description={weatherWeekObjUpdated[0][2]} />,<WeatherRow key= "2" day={weatherWeekObjUpdated[1][0]} temp={weatherWeekObjUpdated[1][1]} description={weatherWeekObjUpdated[1][2]} />,
-            <WeatherRow key= "3" day={weatherWeekObjUpdated[2][0]} temp={weatherWeekObjUpdated[2][1]} description={weatherWeekObjUpdated[2][2]} />,<WeatherRow key= "4" day={weatherWeekObjUpdated[3][0]} temp={weatherWeekObjUpdated[3][1]} description={weatherWeekObjUpdated[3][2]} />,
-            <WeatherRow key= "5" day={weatherWeekObjUpdated[4][0]} temp={weatherWeekObjUpdated[4][1]} description={weatherWeekObjUpdated[4][2]} />,<WeatherRow key= "6" day={weatherWeekObjUpdated[5][0]} temp={weatherWeekObjUpdated[5][1]} description={weatherWeekObjUpdated[5][2]} />,
-            <WeatherRow key= "7" day={weatherWeekObjUpdated[6][0]} temp={weatherWeekObjUpdated[6][1]} description={weatherWeekObjUpdated[6][2]} />]
-            // var weatherWeekObjUpdated = {
-            //     dayOne: [this.convertDay(daysTimeStamp[0].time),dayOne.summary],
-            //     dayTwo: {
-            //         day: this.convertDay(daysTimeStamp[1].time),
-            //         description: dayTwo.summary
-            //     },
-            //     dayThree: {
-            //         day: this.convertDay(daysTimeStamp[2].time),
-            //         description: dayThree.summary
-            //     },
-            //     dayFour: {
-            //         day: this.convertDay(daysTimeStamp[3].time),
-            //         description: dayFour.summary
-            //     },
-            //     dayFive: {
-            //         day: this.convertDay(daysTimeStamp[4].time),
-            //         description: dayFive.summary
-            //     },
-            //     daySix: {
-            //         day: this.convertDay(daysTimeStamp[5].time),
-            //         description: daySix.summary
-            //     },
-            //     daySeven: {
-            //         day: this.convertDay(daysTimeStamp[6].time),
-            //         description: daySeven.summary
-            //     }
-            // }
-            // console.log("HERE IS THE OBJECT: " + weatherWeekObjUpdated.dayOne.day)
-            console.log("weatherItems: " + weatherItems);
-            this.setState({ weatherWeekObj: weatherWeekObjUpdated, weatherArray: weatherItems});
+            console.log(json.daily.data);
+            this.setState({ weatherJSON: json.daily.data}, function(){
+                this.createWeatherComponents(this.state.weatherJSON);
+            });
         })
         .catch(err => console.log(err));
     }
 
-
     showWeather(){
-
-        // if (this.state.weatherWeekObj === null) {
-        //
-        // }
-        // if state weather != null
-            // generate weather jsx
-
-            // else show default message
-
-        if (this.state.weatherWeekObj[2]){
-            return (
-                [
-                    <WeatherRow key= "1" day={this.state.weatherWeekObj[0][0]} temp={this.state.weatherWeekObj[0][1]} description={this.state.weatherWeekObj[0][2]} />,
-                    <WeatherRow key= "2" day={this.state.weatherWeekObj[1][0]} temp={this.state.weatherWeekObj[1][1]} description={this.state.weatherWeekObj[1][2]} />,
-                    <WeatherRow key= "3" day={this.state.weatherWeekObj[2][0]} temp={this.state.weatherWeekObj[2][1]} description={this.state.weatherWeekObj[2][2]} />,
-                    <WeatherRow key= "4" day={this.state.weatherWeekObj[3][0]} temp={this.state.weatherWeekObj[3][1]} description={this.state.weatherWeekObj[3][2]} />,
-                    <WeatherRow key= "5" day={this.state.weatherWeekObj[4][0]} temp={this.state.weatherWeekObj[4][1]} description={this.state.weatherWeekObj[4][2]} />,
-                    <WeatherRow key= "6" day={this.state.weatherWeekObj[5][0]} temp={this.state.weatherWeekObj[5][1]} description={this.state.weatherWeekObj[5][2]} />,
-                    <WeatherRow key= "7" day={this.state.weatherWeekObj[6][0]} temp={this.state.weatherWeekObj[6][1]} description={this.state.weatherWeekObj[6][2]} />
-                ]
-            )
-
+        if (this.state.weatherShow != null){
+            return this.state.weatherShow;
         }else{
             return <Text>{''}</Text>
         }
     }
 
-
-
     render() {
-
-        // if weather json != "hh"
-        //  map weather jso to jsx
-
-        // const displayMe = this.showWeather();
-
         return (
             <View>
                 <ScrollView>
@@ -142,18 +92,3 @@ export default class Location extends React.Component {
         )
     }
 }
-
-
-
-
-
-
-//
-
-/*
-this.state.user =  {name: "Joe", age: 33};    //
-this.state.user.name = "cindy";
-this.setState( this.state.user );      // ! Bad !
-
-this.setState( { ...this.state.user, name:"Cindy" } );
-*/
