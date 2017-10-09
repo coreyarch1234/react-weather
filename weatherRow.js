@@ -6,13 +6,15 @@ import { StyleSheet, Text, View } from 'react-native';
 export default WeatherRow = (props) => {
     return (
         <View style = {styles.dayTemp}>
-            <Text>{props.day}</Text>
-            <Text>{props.temp}</Text>
-
-            <View style = {styles.weatherInfo}>
-                <Text>{props.description}</Text>
+            <View  style = {styles.day}>
+                <Text>{props.day}</Text>
             </View>
-
+            <View style = {styles.temp}>
+                <Text style = {styles.temp}>{props.temp}</Text>
+            </View>
+            <View style = {styles.description}>
+                <Text style = {styles.description}>{props.description}</Text>
+            </View>
         </View>
     );
 }
@@ -23,20 +25,33 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'space-around',
-        paddingTop: 50,
+        paddingTop: 25,
         width: '100%',
         // backgroundColor: 'purple'
     },
     day: {
-        fontSize: 20,
-        fontWeight: '200',
-        paddingBottom: 4
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-around',
+        width: '20%',
+        // backgroundColor: 'blue'
     },
-    weather: {
-        fontSize: 18,
-        fontWeight: '400'
+    temp: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-around',
+        width: '25%',
+        fontSize: 15
+        // backgroundColor: 'green'
     },
-    weatherInfo: {
-        flexDirection: 'column'
+    description: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        width: '70%',
+        // backgroundColor: 'red'
     }
 });
