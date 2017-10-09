@@ -5,7 +5,7 @@
 // Fill weatherRow component with the weather info for those 5 days and store them in an array.
 // Export this array to App.js and there, display the rows in a scroll view.
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingVie } from 'react-native';
 import WeatherRow from './weatherRow';
 
 var moment = require('moment');
@@ -61,6 +61,7 @@ export default class Location extends React.Component {
     }
 
     weatherJSON(){
+        //get city and use that. either default or new city from input
         const apikey = '2a479a5ffb1ba14071e4c9bc65704b63';
         const path = `https://api.darksky.net/forecast/2a479a5ffb1ba14071e4c9bc65704b63/42.3601,-71.0589`;
         console.log("it is fetching");
