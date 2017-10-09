@@ -32,25 +32,25 @@ const styles = StyleSheet.create({
     day: {
         display: 'flex',
         flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'flex-end',
         justifyContent: 'space-around',
         width: '20%',
+        left: 20
         // backgroundColor: 'blue'
     },
     temp: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        justifyContent: 'space-around',
+        justifyContent: 'flex-end',
         width: '25%',
-        fontSize: 15
         // backgroundColor: 'green'
     },
     description: {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-around',
         width: '70%',
         // backgroundColor: 'red'
     }

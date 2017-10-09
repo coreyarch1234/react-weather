@@ -36,7 +36,7 @@ export default class Location extends React.Component {
 
     }
     convertDay(timeStamp) {
-        const days = ["Mon","Tues","Wed","Thurs","Fri","Sat", "Sun"];
+        const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday", "Sunday"];
         const testDate = new Date(timeStamp * 1000);
         const testDay = testDate.getDay();
         console.log("the test day is: " + testDay);
@@ -105,7 +105,7 @@ export default class Location extends React.Component {
     render() {
         return (
             <View>
-
+                {this.showCurrentDateTemp()}
                 <ScrollView contentContainerStyle={style.center}>
                     {this.showWeather()}
                 </ScrollView>
