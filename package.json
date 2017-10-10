@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "dotenv": "^4.0.0",
     "expo": "^21.0.0",
     "moment": "^2.18.1",

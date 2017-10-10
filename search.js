@@ -16,6 +16,7 @@ export default class SubmitCity extends Component {
           style={{height: 40}}
           placeholder="Type in a new city!"
           onChangeText={(text) => this.setState({text})}
+          value={this.state.text}
         />
         <TouchableOpacity
               style = {styles.submitButton}
@@ -33,9 +34,11 @@ const styles = {
 
     submitButton: {
         backgroundColor: '#7a42f4',
-        padding: 10,
-        margin: 15,
-        height: 40,
+        width: 135,
+        paddingLeft: 40,
+        paddingTop: 10,
+        borderRadius: 10,
+        height: 40
      },
 
     submitButtonText:{

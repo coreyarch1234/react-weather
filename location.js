@@ -23,13 +23,16 @@ export default class Location extends React.Component {
         this.currentDay = this.current.format("DD");
         this.currentDayName = this.current.format("dddd");
         this.currentMonth = this.current.format("MMMM");
-        this.currentCity = props.currentCity;
+        // this.currentCity = props.currentCity;
 
         this.state = {
             weatherJSON: null,
-            weatherShow: null
+            weatherShow: null,
+            currentCity: props.currentCity,
+            trigger: false
         }
-        this.weatherJSON();
+        console.log("THE CITY START IS: " + props.currentCity);
+        // this.weatherJSON();
     }
 
     componentWillMount(){
@@ -60,26 +63,56 @@ export default class Location extends React.Component {
         }
     }
 
-    weatherJSON(){
-        //get city and use that. either default or new city from input
-        const apikey = '2a479a5ffb1ba14071e4c9bc65704b63';
-        const path = `https://api.darksky.net/forecast/2a479a5ffb1ba14071e4c9bc65704b63/42.3601,-71.0589`;
-        console.log("it is fetching");
-        fetch(path)
+    geoCode(address, callback){
+        const city = address.split(' ').join('+');
+        const geoCodeKey = 'AIzaSyDTz7r5lJisnMBK7AAHOFE_kM5RQ_aalpk';
+        console.log("the city is: " + city);
+        const query = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=' + geoCodeKey;
+        fetch(query)
         .then(res => res.json())
         .then((json) => {
-            console.log(json.daily.data);
-            this.setState({weatherJSON: json.daily.data}, function(){
-                this.createWeatherComponents(this.state.weatherJSON);
-            });
+            console.log(json);
+            console.log("lat: " + json.results[0].geometry.location.lat);
+            console.log("lon: " + json.results[0].geometry.location.lng);
+            const coordinates = {
+                lat: json.results[0].geometry.location.lat,
+                lon: json.results[0].geometry.location.lng
+            }
+            callback(coordinates);
         })
         .catch(err => console.log(err));
     }
 
+    weatherJSON(){
+        //get city and use that. either default or new city from input
+        var address = this.props.currentCity;
+        console.log("THE CURRENT CITY FUCK IS: " + address);
+        this.geoCode(address, (coordinates) => {
+            console.log("the coordinates are: " + coordinates.lat + ", " + coordinates.lon);
+            const apikey = '2a479a5ffb1ba14071e4c9bc65704b63';
+            // 42.3601,-71.0589
+            const path = `https://api.darksky.net/forecast/2a479a5ffb1ba14071e4c9bc65704b63/${coordinates.lat},${coordinates.lon}`;
+            console.log("it is fetching");
+            fetch(path)
+            .then(res => res.json())
+            .then((json) => {
+                // console.log(json);
+                console.log(json.timezone);
+                // console.log(json.daily.data);
+                this.setState({weatherJSON: json.daily.data, currentCity: this.props.currentCity}, function(){
+                    this.createWeatherComponents(this.state.weatherJSON);
+                });
+            })
+            .catch(err => console.log(err));
+        });
+    }
+
     showWeather(){
+        console.log("THE SHOW WEATHER IS: " + this.state.weatherShow)
         if (this.state.weatherShow != null){
             return this.state.weatherShow;
         }else{
+            console.log("THE SHOW WEATHER IS NULL: " + this.state.weatherShow)
             return <Text>{''}</Text>
         }
     }
@@ -89,10 +122,12 @@ export default class Location extends React.Component {
         console.log("current day name: "  + this.currentDayName);
         console.log("current day name: "  + this.currentMonth);
         console.log("current day name: "  + this.currentDay);
+        // console.log("THE CURRENT CITY THAT WE HAVE IS: " + this.props.currentCity)
         if (this.state.weatherJSON != null){
+            console.log("THE CURRENT CITY THAT WE HAVE IS: " + this.props.currentCity)
             return (
                 <View style= {styles.container}>
-                    <Text style= {styles.state}>{this.currentCity}</Text>
+                    <Text style= {styles.state}>{this.props.currentCity}</Text>
                     <Text style= {styles.date}>{this.currentDayName}, {this.currentMonth} {this.currentDay}</Text>
                     <Text style= {styles.weatherDescription}>{this.state.weatherJSON[0].summary}</Text>
                     <Text style= {styles.currentWeather}>{this.state.weatherJSON[0].temperatureHigh}˚</Text>
@@ -103,7 +138,23 @@ export default class Location extends React.Component {
         }
     }
 
+
     render() {
+        if (this.props.currentCity != this.state.currentCity || this.state.weatherJSON == null){
+            console.log("prop city: " + this.props.currentCity);
+            console.log("state city: " + this.state.currentCity);
+            // if (this.state.trigger == false){
+            //     // this.weatherJSON();
+            //     this.setState({trigger: true});
+            // }else{
+            //     this.weatherJSON();
+            //     this.setState({trigger: false});
+            // }
+            // this.setState({currentCity: this.props.currentCity}, function(){
+            //     this.weatherJSON();
+            // })
+            this.weatherJSON();
+        }
         return (
             <View>
                 {this.showCurrentDateTemp()}
