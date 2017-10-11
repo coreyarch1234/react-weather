@@ -9,11 +9,6 @@ import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingVie } from 'react-n
 import WeatherRow from './weatherRow';
 
 var moment = require('moment');
-// var current = moment();
-// var currentDay = current.format("DD");
-// var currentMonth = current.format("MMMM");
-
-
 
 export default class Location extends React.Component {
     constructor(props){
@@ -23,7 +18,6 @@ export default class Location extends React.Component {
         this.currentDay = this.current.format("DD");
         this.currentDayName = this.current.format("dddd");
         this.currentMonth = this.current.format("MMMM");
-        // this.currentCity = props.currentCity;
 
         this.state = {
             weatherJSON: null,
@@ -47,14 +41,17 @@ export default class Location extends React.Component {
         return days[testDay]
     }
 
+    //take weather json data and create the 7 weather components
     createWeatherComponents(weatherData){
         const days = ["Sun","Mon","Tues","Wed","Thurs","Fri","Sat"];
         const daysTimeStamp = weatherData //array of days [0 - 6]
         var weatherWeekObj = [];
         var weatherShow = [];
+        //push weather components into weatherShow and when done, set state
         for (const [index, element] of days.entries()){
             var currentDay = daysTimeStamp[index];
-            weatherShow.push(<WeatherRow key={index} day={this.convertDay(currentDay.time)} temp={Math.round(currentDay.temperatureHigh)} description={currentDay.summary}/>);
+            var currentDayTemp = Math.round(currentDay.temperatureHigh) + '˚';
+            weatherShow.push(<WeatherRow key={index} day={this.convertDay(currentDay.time)} temp={currentDayTemp} description={currentDay.summary}/>);
             console.log("index: " + index);
             if (index == days.length - 1){
                 console.log("we reached it");
@@ -63,6 +60,7 @@ export default class Location extends React.Component {
         }
     }
 
+    //take physical address and create lat/lon coordinates
     geoCode(address, callback){
         const city = address.split(' ').join('+');
         const geoCodeKey = 'AIzaSyDTz7r5lJisnMBK7AAHOFE_kM5RQ_aalpk';
@@ -83,9 +81,9 @@ export default class Location extends React.Component {
         .catch(err => console.log(err));
     }
 
+    //get city and use that. either default or new city from input
     weatherJSON(){
-        //get city and use that. either default or new city from input
-        var address = this.props.currentCity;
+        var address = this.props.currentCity; //set in constructor
         console.log("THE CURRENT CITY FUCK IS: " + address);
         this.geoCode(address, (coordinates) => {
             console.log("the coordinates are: " + coordinates.lat + ", " + coordinates.lon);
@@ -99,6 +97,7 @@ export default class Location extends React.Component {
                 // console.log(json);
                 console.log(json.timezone);
                 // console.log(json.daily.data);
+                //set weather json and the current city. then call createWeatherComponents
                 this.setState({weatherJSON: json.daily.data, currentCity: this.props.currentCity}, function(){
                     this.createWeatherComponents(this.state.weatherJSON);
                 });
@@ -107,6 +106,7 @@ export default class Location extends React.Component {
         });
     }
 
+    //if weatherShow is not null, return all of the components for display
     showWeather(){
         console.log("THE SHOW WEATHER IS: " + this.state.weatherShow)
         if (this.state.weatherShow != null){
@@ -117,6 +117,8 @@ export default class Location extends React.Component {
         }
     }
 
+    //this is the header data in large text at the top before the weather rows:
+    //the current city, the current temp, etc
     showCurrentDateTemp(){
         console.log("this is reached");
         console.log("current day name: "  + this.currentDayName);
@@ -130,7 +132,7 @@ export default class Location extends React.Component {
                     <Text style= {styles.state}>{this.props.currentCity}</Text>
                     <Text style= {styles.date}>{this.currentDayName}, {this.currentMonth} {this.currentDay}</Text>
                     <Text style= {styles.weatherDescription}>{this.state.weatherJSON[0].summary}</Text>
-                    <Text style= {styles.currentWeather}>{this.state.weatherJSON[0].temperatureHigh}˚</Text>
+                    <Text style= {styles.currentWeather}>{Math.round(this.state.weatherJSON[0].temperatureHigh)}˚</Text>
                 </View>
             )
         }else{
@@ -140,19 +142,13 @@ export default class Location extends React.Component {
 
 
     render() {
+        //in the beginning, this.props.currentCity will equal this.state.currentCity and
+        //this.state.weatherJSON will be null so this will pass and this.weatherJson will
+        //be called. This triggers all of the functions above. It will not be run when the DOM
+        // renders again. If the user then changes the location, this function will be run.
         if (this.props.currentCity != this.state.currentCity || this.state.weatherJSON == null){
             console.log("prop city: " + this.props.currentCity);
             console.log("state city: " + this.state.currentCity);
-            // if (this.state.trigger == false){
-            //     // this.weatherJSON();
-            //     this.setState({trigger: true});
-            // }else{
-            //     this.weatherJSON();
-            //     this.setState({trigger: false});
-            // }
-            // this.setState({currentCity: this.props.currentCity}, function(){
-            //     this.weatherJSON();
-            // })
             this.weatherJSON();
         }
         return (
@@ -171,7 +167,6 @@ const style = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   }
-
 });
 
 
@@ -183,20 +178,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         height: '100%',
-        // backgroundColor: 'purple'
 
     },
     state: {
         fontSize: 40,
         fontWeight: '300',
         paddingBottom: 10,
-        // flex: 1
     },
     date:{
         fontSize: 25,
         fontWeight: '200',
         paddingBottom: 15,
-        // flex: 1
     },
     dayTemp: {
         width: 50,
@@ -208,8 +200,6 @@ const styles = StyleSheet.create({
     currentWeather: {
        fontSize: 70,
        paddingBottom: 5,
-    //    flex: 1,
-    //    backgroundColor: 'cyan'
     },
     weatherDescription: {
        fontSize: 18,

@@ -15,6 +15,21 @@ export default class App extends React.Component {
     }
 
     componentWillMount(){
+        this.getCurrentLocation();
+    }
+
+    //get current location and set that to the location components unless someone submits a new city
+    getCurrentLocation(){
+        var url = 'https://freegeoip.net/json/';
+        fetch(url)
+          .then((response) => response.json())
+          .then((responseJson) => {
+            // console.log(responseJson);
+            this.setState({currentCity: responseJson.city});
+          })
+          .catch((error) => {
+              console.error(error);
+          });
     }
 
     setCity(city){
@@ -24,6 +39,7 @@ export default class App extends React.Component {
         }
     }
 
+    //current city will not be null. if not null, pass in current city. then pass in user submitted city
     showState(){
         console.log("THE NEW CITY IS: " + this.state.currentCity);
         if (this.state.currentCity != null){
@@ -36,7 +52,16 @@ export default class App extends React.Component {
         }
     }
 
-
+    showSubmitForm(){
+        if (this.state.currentCity != null){
+            return (
+                <SubmitCity onSubmit={(term) => {
+                    console.log("the new city is: ", term);
+                    this.setCity(term);
+                }} />
+            )
+        }
+    }
 
     render() {
 
@@ -44,10 +69,7 @@ export default class App extends React.Component {
         return (
             <View style= {styles.container}>
                 <View style= {styles.cityContainer}>
-                    <SubmitCity onSubmit={(term) => {
-                        console.log("the new city is: ", term);
-                        this.setCity(term);
-                    }} />
+                    {this.showSubmitForm()}
                 </View>
 
                 {this.showState()}
@@ -63,8 +85,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         height: '100%',
-        // backgroundColor: 'purple'
-
     },
 
     cityContainer: {
@@ -73,8 +93,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-end',
         height: '20%',
-        // backgroundColor: 'purple'
-
     },
 
     locationContainer: {
@@ -83,20 +101,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         height: '80%',
-        // backgroundColor: 'purple'
-
     },
     state: {
         fontSize: 40,
         fontWeight: '300',
         paddingBottom: 5,
-        // flex: 1
     },
     date:{
         fontSize: 25,
         fontWeight: '200',
         paddingBottom: 10,
-        // flex: 1
     },
     dayTemp: {
         width: 50,
@@ -108,8 +122,6 @@ const styles = StyleSheet.create({
     currentWeather: {
        fontSize: 90,
        paddingBottom: 5,
-    //    flex: 1,
-    //    backgroundColor: 'cyan'
     },
     weatherDescription: {
        fontSize: 18,
