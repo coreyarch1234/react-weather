@@ -5,7 +5,7 @@
 // Fill weatherRow component with the weather info for those 5 days and store them in an array.
 // Export this array to App.js and there, display the rows in a scroll view.
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingVie } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, KeyboardAvoidingView } from 'react-native';
 import WeatherRow from './weatherRow';
 
 var moment = require('moment');
@@ -22,16 +22,17 @@ export default class Location extends React.Component {
         this.state = {
             weatherJSON: null,
             weatherShow: null,
-            currentCity: props.currentCity,
-            trigger: false
+            currentCity: props.currentCity
         }
         console.log("THE CITY START IS: " + props.currentCity);
         // this.weatherJSON();
     }
 
-    componentWillMount(){
-
+    componentWillMount() {
+        // this.weatherJSON();
+        console.log(">>>>>>> Location component displays the weather! will mount <<<<<<<");
     }
+
     convertDay(timeStamp) {
         const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday", "Sunday"];
         const testDate = new Date(timeStamp * 1000);
@@ -69,7 +70,7 @@ export default class Location extends React.Component {
         fetch(query)
         .then(res => res.json())
         .then((json) => {
-            console.log(json);
+            // console.log(json);
             console.log("lat: " + json.results[0].geometry.location.lat);
             console.log("lon: " + json.results[0].geometry.location.lng);
             const coordinates = {
@@ -82,9 +83,9 @@ export default class Location extends React.Component {
     }
 
     //get city and use that. either default or new city from input
-    weatherJSON(){
+    weatherJSON() {
         var address = this.props.currentCity; //set in constructor
-        console.log("THE CURRENT CITY FUCK IS: " + address);
+        console.log("THE CURRENT CITY IS: " + address);
         this.geoCode(address, (coordinates) => {
             console.log("the coordinates are: " + coordinates.lat + ", " + coordinates.lon);
             const apikey = '2a479a5ffb1ba14071e4c9bc65704b63';
@@ -98,9 +99,12 @@ export default class Location extends React.Component {
                 console.log(json.timezone);
                 // console.log(json.daily.data);
                 //set weather json and the current city. then call createWeatherComponents
-                this.setState({weatherJSON: json.daily.data, currentCity: this.props.currentCity}, function(){
-                    this.createWeatherComponents(this.state.weatherJSON);
-                });
+                this.setState({
+                    weatherJSON: json.daily.data,
+                    currentCity: this.props.currentCity},
+                    function(){
+                        this.createWeatherComponents(this.state.weatherJSON);
+                    });
             })
             .catch(err => console.log(err));
         });
@@ -141,16 +145,27 @@ export default class Location extends React.Component {
     }
 
 
-    render() {
-        //in the beginning, this.props.currentCity will equal this.state.currentCity and
-        //this.state.weatherJSON will be null so this will pass and this.weatherJson will
-        //be called. This triggers all of the functions above. It will not be run when the DOM
-        // renders again. If the user then changes the location, this function will be run.
+    shouldFetchWeather() {
         if (this.props.currentCity != this.state.currentCity || this.state.weatherJSON == null){
             console.log("prop city: " + this.props.currentCity);
             console.log("state city: " + this.state.currentCity);
             this.weatherJSON();
         }
+    }
+
+
+    render() {
+        //in the beginning, this.props.currentCity will equal this.state.currentCity and
+        //this.state.weatherJSON will be null so this will pass and this.weatherJson will
+        //be called. This triggers all of the functions above. It will not be run when the DOM
+        // renders again. If the user then changes the location, this function will be run.
+        // this.shouldFetchWeather();
+
+        this.shouldFetchWeather();
+
+        console.log("* * * * *  "+this.props.currentCity+" * * * * * ");
+        // this.setState({ currentCity: this.props.currentCity });
+
         return (
             <View>
                 {this.showCurrentDateTemp()}

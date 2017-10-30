@@ -46,22 +46,26 @@ export default class App extends React.Component {
             console.log("THE NEW NEW CITY IS: " + this.state.currentCity);
             return (
                 <View style= {styles.locationContainer}>
-                    <LocationData currentCity={this.state.currentCity}/>
+                    <LocationData currentCity={this.state.currentCity} />
                 </View>
             )
+        } else {
+            return <Text>Loading...</Text>
         }
     }
 
-    showSubmitForm(){
-        if (this.state.currentCity != null){
-            return (
-                <SubmitCity onSubmit={(term) => {
-                    console.log("the new city is: ", term);
-                    this.setCity(term);
-                }} />
-            )
-        }
-    }
+    // showSubmitForm(){
+    //     if (this.state.currentCity != null){
+    //         return (
+    //             <SubmitCity onSubmit={(term) => {
+    //                 console.log("the new city is: ", term);
+    //                 this.setCity(term);
+    //             }} />
+    //         )
+    //     }else {
+    //         return <Text>Loading...</Text>
+    //     }
+    // }
 
     render() {
 
@@ -69,7 +73,11 @@ export default class App extends React.Component {
         return (
             <View style= {styles.container}>
                 <View style= {styles.cityContainer}>
-                    {this.showSubmitForm()}
+                    <SubmitCity onSubmit={(term) => {
+                        console.log("the new city is: ", term);
+                        this.setCity(term);
+                    }} />
+
                 </View>
 
                 {this.showState()}
